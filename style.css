@@ -48,6 +48,11 @@ body {
   cursor: none;
 }
 
+.game__level {
+  font-size: 24px;
+  color: black;
+}
+
 .game__timer {
   width: 76px;
   height: 38px;
