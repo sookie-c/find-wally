@@ -18,6 +18,22 @@ body {
   background: url("img/level/l1.jpg") center/cover;
 }
 
+.level--2 {
+  background: url("img/level/l2.jpg") center/cover;
+}
+
+.level--3 {
+  background: url("img/level/l3.jpg") center/cover;
+}
+
+.level--4 {
+  background: url("img/level/l4.jpg") center/cover;
+}
+
+.level--5 {
+  background: url("img/level/l5.jpg") center/cover;
+}
+
 .game__start {
   display: flex;
   flex-direction: column;
