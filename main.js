@@ -53,6 +53,11 @@ function startGame() {
     showLevel();
 }
 
+function finishGame() {
+    started = false;
+    showPopUpWithText('Congrats! You completed');
+}
+
 function showLive() {
     gameLive.textContent = `♥️ x ${live}`;
 }
@@ -63,6 +68,11 @@ function showLevel() {
 
 function showGameHeader() {
     gameHeader.style.display = 'flex';
+}
+
+function showStartPage() {
+    gameStart.style.display = 'flex';
+    gameHeader.style.display = 'none';
 }
 
 function hideStartPage() {
@@ -79,13 +89,12 @@ function onFieldClick(e) {
     if (popUpOn) {
         return;
     }
- 
     if (clicked === 'game__field level--1') {
         if (waldoX > L1_WALDO_MIN_X && waldoX < L1_WALDO_MAX_X && waldoY > L1_WALDO_MIN_Y && waldoY < L1_WALDO_MAX_Y) {
             level++;
             showPopUpWithText('Found it! Next Stage?');
             } else {
-            reduceLive();
+                reduceLive();
             }
     }
     if (clicked === 'game__field level--2') {
@@ -114,7 +123,7 @@ function onFieldClick(e) {
     }
     if (clicked === 'game__field level--5') {
         if (waldoX > L5_WALDO_MIN_X && waldoX < L5_WALDO_MAX_X && waldoY > L5_WALDO_MIN_Y && waldoY < L5_WALDO_MAX_Y) {
-                stopGame();
+                finishGame();
         } else {
                reduceLive();
         }
@@ -126,11 +135,12 @@ function reduceLive() {
     showLive();
     if (live <= 0) {
         started = false;
-        showPopUpWithText('You lost..');
+        showPopUpWithText('Game Over');
     }
 }
 
 function showPopUpWithText(text) {
+    popUpOn = true;
     popUpMessage.innerText = text;
     popUp.classList.remove('pop-up--hide');
     if (!started) {
@@ -138,6 +148,11 @@ function showPopUpWithText(text) {
     } else {
         showPlayButton();
     }
+}
+
+function hidePopUp() {
+    popUpOn = false;
+    popUp.classList.add('pop-up--hide');
 }
 
 function showReplayButton() { 
@@ -153,6 +168,7 @@ function showPlayButton() {
 popUpRefresh.addEventListener('click', () => {
     if (!started) {
         hidePopUp();
+        initGame(level);
     } else {
         updateLevel();
         nextLevel();
@@ -160,9 +176,12 @@ popUpRefresh.addEventListener('click', () => {
     }
 });
 
-function hidePopUp() {
-    popUpOn = false;
-    popUp.classList.add('pop-up--hide');
+function initGame(failedLevel) {
+    level = 1;
+    live = 5;
+    gameField.classList.remove(`level--${failedLevel}`);
+    gameField.classList.add('level--1');
+    showStartPage();
 }
 
 function nextLevel() {
