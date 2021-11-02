@@ -25,12 +25,15 @@ const L5_WALDO_MAX_X = 38;
 const L5_WALDO_MIN_Y = 530;
 const L5_WALDO_MAX_Y = 567;
 
+const GAME_DURATION_SEC = 120;
+
 const gameBtn = document.querySelector('.game__button');
 const gameStart = document.querySelector('.game__start');
 const gameHeader = document.querySelector('.game__header');
 const gameField = document.querySelector('.game__field');
 const gameLevel = document.querySelector('.game__level');
 const gameLive = document.querySelector('.game__live');
+const gameTimer = document.querySelector('.game__timer');
 const popUp = document.querySelector('.pop-up');
 const popUpRefresh = document.querySelector('.pop-up__refresh');
 const popUpMessage = document.querySelector('.pop-up__message');
@@ -40,6 +43,7 @@ let started = false;
 let level = 1;
 let live = 5;
 let popUpOn = false;
+let timer = undefined;
 
 gameBtn.addEventListener('click', () => {
     startGame();
@@ -51,11 +55,17 @@ function startGame() {
     showGameHeader();
     showLive();
     showLevel();
+    startGameTimer();
 }
 
-function finishGame() {
+function finishGame(win) {
     started = false;
-    showPopUpWithText('Congrats! You completed');
+    showPopUpWithText(win ? 'Congrats! You completed' : 'Game Over');
+    stopGameTimer();
+}
+
+function showGameHeader() {
+    gameHeader.style.display = 'flex';
 }
 
 function showLive() {
@@ -66,8 +76,30 @@ function showLevel() {
     gameLevel.innerText = `Level ${level}`;
 }
 
-function showGameHeader() {
-    gameHeader.style.display = 'flex';
+function startGameTimer() {
+    let remainingTimeSec = GAME_DURATION_SEC;
+    updateTimerText(remainingTimeSec);
+    timer = setInterval( () => {
+        if (remainingTimeSec <= 0) {
+            clearInterval(timer);
+            finishGame(false);
+            return;
+        }
+        updateTimerText(--remainingTimeSec);
+    }, 1000);
+}
+
+function stopGameTimer() {
+    clearInterval(timer);
+}
+
+function updateTimerText(time) {
+    let minute = Math.floor(time / 60);
+    let second = time % 60;
+    if (second >= 0 && second < 10) {
+        second = '0' + second;
+    }
+    gameTimer.innerText = `${minute}:${second}`;
 }
 
 function showStartPage() {
@@ -93,37 +125,38 @@ function onFieldClick(e) {
         if (waldoX > L1_WALDO_MIN_X && waldoX < L1_WALDO_MAX_X && waldoY > L1_WALDO_MIN_Y && waldoY < L1_WALDO_MAX_Y) {
             level++;
             showPopUpWithText('Found it! Next Stage?');
+            stopGameTimer();
             } else {
                 reduceLive();
             }
-    }
-    if (clicked === 'game__field level--2') {
+    } else if (clicked === 'game__field level--2') {
         if (waldoX > L2_WALDO_MIN_X && waldoX < L2_WALDO_MAX_X && waldoY > L2_WALDO_MIN_Y && waldoY < L2_WALDO_MAX_Y) {
             level++;
             showPopUpWithText('Found it! Next Stage?');
+            stopGameTimer();
             } else {
                    reduceLive();
             }
-    }
-     if (clicked === 'game__field level--3') {
+    } else if (clicked === 'game__field level--3') {
         if (waldoX > L3_WALDO_MIN_X && waldoX < L3_WALDO_MAX_X && waldoY > L3_WALDO_MIN_Y && waldoY < L3_WALDO_MAX_Y) {
             level++;
             showPopUpWithText('Found it! Next Stage?');
+            stopGameTimer();
         } else {
                reduceLive();
         }
-    }
-    if (clicked === 'game__field level--4') {
+    } else if (clicked === 'game__field level--4') {
         if (waldoX > L4_WALDO_MIN_X && waldoX < L4_WALDO_MAX_X && waldoY > L4_WALDO_MIN_Y && waldoY < L4_WALDO_MAX_Y) {
             level++;
             showPopUpWithText('Found it! Next Stage?');
+            stopGameTimer();
         } else {
                reduceLive();
         }
-    }
-    if (clicked === 'game__field level--5') {
+    } else if (clicked === 'game__field level--5') {
         if (waldoX > L5_WALDO_MIN_X && waldoX < L5_WALDO_MAX_X && waldoY > L5_WALDO_MIN_Y && waldoY < L5_WALDO_MAX_Y) {
-                finishGame();
+                finishGame(true);
+                stopGameTimer();
         } else {
                reduceLive();
         }
@@ -148,6 +181,7 @@ function showPopUpWithText(text) {
     } else {
         showPlayButton();
     }
+    stopGameTimer();
 }
 
 function hidePopUp() {
@@ -173,6 +207,7 @@ popUpRefresh.addEventListener('click', () => {
         updateLevel();
         nextLevel();
         hidePopUp();
+        startGameTimer();
     }
 });
 
