@@ -9,23 +9,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
     <title>Where's Waldo?</title>
 </head>
 <body>
+
     <section class="game">
-        <section class="game__start">
-            <img src="img/waldo-logo.png" alt="game__logo" class="game__logo">
-            <button class="game__button">Start</button>
+
+        <section class="game__field level--1">
+            <header class="game__header">
+                <span class="game__live"></span>
+                <span class="game__level"></span>
+                <span class="game__timer">00:00</span>
+            </header>
         </section>
-        <header class="game__header">
-            <span class="game__live">💙 💙 💙</span>
-            <span class="game__level">Level 1</span>
-            <span class="game__timer">00:00</span>
-        </header>
     </section>
-    <section class="pop-up hide">
+
+    <section class="game__start">
+        <img src="img/waldo-logo.png" alt="game__logo" class="game__logo">
+        <button class="game__button">Start</button>
+    </section>
+
+    <section class="pop-up pop-up--hide">
         <button class="pop-up__refresh">
-            <i class="fas fa-reply"></i>
+            <i class="fas fa-play"></i>
         </button>
         <span class="pop-up__message">Replay?</span>
     </section>
