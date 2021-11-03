@@ -1,5 +1,7 @@
 'use strict';
 
+import * as sound from './sound.js';
+
 export default class Game {
     constructor(gameDuration) {
         this.gameDuration = gameDuration;
@@ -19,7 +21,7 @@ export default class Game {
         this.timer = undefined;
         this.gameBtn.addEventListener('click', () => {
             this.start();
-            //playSound(foundSound);
+            sound.playFound();
         });
     }
 
@@ -34,8 +36,7 @@ export default class Game {
         this.showLive();
         this.showLevel();
         this.startTimer();
-        console.log('started');
-        //playSound(bgSound);
+        sound.playBg();
     }
 
     showStartPage() {
@@ -75,7 +76,7 @@ export default class Game {
             if (remainingTimeSec <= 0) {
                 clearInterval(this.timer);
                 this.finish(false);
-                //playSound(alertSound);
+                sound.playAlert();
                 return;
             }
             this.updateTimerText(--remainingTimeSec);
@@ -101,9 +102,7 @@ export default class Game {
         if (this.live <= 0) {
             this.started = false;
             this.finish(false);
-            //showWithText('lose');
-            //this.onGameStop && this.onGameStop('lose');
-            //playSound(alertSound);
+            sound.playAlert();
         }
     }
 
@@ -112,7 +111,7 @@ export default class Game {
         this.stopTimer();
         this.onGameStop && this.onGameStop(win ? 'win' : 'lose');
         this.showReplayIcon();
-        //stopSound(bgSound);
+        sound.stopBg();
     }
 
     initGame(failedLevel) {

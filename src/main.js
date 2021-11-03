@@ -2,6 +2,7 @@
 
 import Game from './game.js';
 import PopUp from './popup.js';
+import * as sound from './sound.js';
 
 const L1_WALDO_MIN_X = 610;
 const L1_WALDO_MAX_X = 630;
@@ -30,15 +31,8 @@ const L5_WALDO_MAX_Y = 567;
 
 const gameField = document.querySelector('.game__field');
 
-const bgSound = new Audio('sound/bg.mp3');
-const foundSound = new Audio('./sound/found.mp3');
-const wrongSound = new Audio('./sound/wrong.mp3');
-const alertSound = new Audio('./sound/alert.wav');
-const winSound = new Audio('./sound/game_win.mp3');
-
 const game = new Game(120);
 game.setGameStopListener((reason) => {
-    console.log(reason);
     let message;
     switch (reason) {
         case 'win':
@@ -62,19 +56,10 @@ gameBanner.setClickListener(() => {
         game.nextLevel();
         game.startTimer();
     }
-    playSound(foundSound);
+    sound.playFound();
 });
 
 gameField.addEventListener('click', onFieldClick);
-
-function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play();
-}
-
-function stopSound(sound) {
-    sound.pause();
-}
 
 function onFieldClick(e) {
     const clicked = e.target.className;
@@ -89,49 +74,49 @@ function onFieldClick(e) {
             game.level++;
             gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
-            playSound(foundSound);
+            sound.playFound();
             } else {
                 game.reduceLive();
-                playSound(wrongSound);
+                sound.playWrong();
             }
     } else if (clicked === 'game__field level--2') {
         if (waldoX > L2_WALDO_MIN_X && waldoX < L2_WALDO_MAX_X && waldoY > L2_WALDO_MIN_Y && waldoY < L2_WALDO_MAX_Y) {
             game.level++;
             gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
-            playSound(foundSound);
+            sound.playFound();
             } else {
                    game.reduceLive();
-                   playSound(wrongSound);
+                   sound.playWrong();
             }
     } else if (clicked === 'game__field level--3') {
         if (waldoX > L3_WALDO_MIN_X && waldoX < L3_WALDO_MAX_X && waldoY > L3_WALDO_MIN_Y && waldoY < L3_WALDO_MAX_Y) {
             game.level++;
             gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
-            playSound(foundSound);
+            sound.playFound();
         } else {
                game.reduceLive();
-               playSound(wrongSound);
+               sound.playWrong();
         }
     } else if (clicked === 'game__field level--4') {
         if (waldoX > L4_WALDO_MIN_X && waldoX < L4_WALDO_MAX_X && waldoY > L4_WALDO_MIN_Y && waldoY < L4_WALDO_MAX_Y) {
             game.level++;
             gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
-            playSound(foundSound);
+            sound.playFound();
         } else {
                game.reduceLive();
-               playSound(wrongSound);
+               sound.playWrong();
         }
     } else if (clicked === 'game__field level--5') {
         if (waldoX > L5_WALDO_MIN_X && waldoX < L5_WALDO_MAX_X && waldoY > L5_WALDO_MIN_Y && waldoY < L5_WALDO_MAX_Y) {
                 game.finish(true);
                 game.stopTimer();
-                playSound(winSound);
+                sound.playWin();
         } else {
                game.reduceLive();
-               playSound(wrongSound);
+               sound.playWrong();
         }
     }
 }
