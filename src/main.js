@@ -1,6 +1,7 @@
 'use strict';
 
 import Game from './game.js';
+import PopUp from './popup.js';
 
 const L1_WALDO_MIN_X = 610;
 const L1_WALDO_MAX_X = 630;
@@ -28,10 +29,6 @@ const L5_WALDO_MIN_Y = 530;
 const L5_WALDO_MAX_Y = 567;
 
 const gameField = document.querySelector('.game__field');
-const popUp = document.querySelector('.pop-up');
-const popUpRefresh = document.querySelector('.pop-up__refresh');
-const popUpMessage = document.querySelector('.pop-up__message');
-const icon = document.querySelector('.fas');
 
 const bgSound = new Audio('sound/bg.mp3');
 const foundSound = new Audio('./sound/found.mp3');
@@ -39,12 +36,34 @@ const wrongSound = new Audio('./sound/wrong.mp3');
 const alertSound = new Audio('./sound/alert.wav');
 const winSound = new Audio('./sound/game_win.mp3');
 
-let popUpOn = false;
-
 const game = new Game(120);
-game.setGameStopListener(reason => {
+game.setGameStopListener((reason) => {
     console.log(reason);
+    let message;
+    switch (reason) {
+        case 'win':
+            message = 'Congrats, You completed!';
+            break;
+        case 'lose':
+            message = 'Game Over..';
+            break;
+        default:
+            throw new Error('not valid reason');
+    }
+    gameBanner.showWithText(message);
 })
+
+const gameBanner = new PopUp();
+gameBanner.setClickListener(() => {
+    if (!game.started) {
+        game.initGame(game.level);
+    } else {
+        game.updateLevel();
+        game.nextLevel();
+        game.startTimer();
+    }
+    playSound(foundSound);
+});
 
 gameField.addEventListener('click', onFieldClick);
 
@@ -62,13 +81,13 @@ function onFieldClick(e) {
     const waldoX = e.offsetX;
     const waldoY = e.offsetY;
 
-    if (popUpOn) {
+    if (gameBanner.popUpOn) {
         return;
     }
     if (clicked === 'game__field level--1') {
         if (waldoX > L1_WALDO_MIN_X && waldoX < L1_WALDO_MAX_X && waldoY > L1_WALDO_MIN_Y && waldoY < L1_WALDO_MAX_Y) {
             game.level++;
-            showPopUpWithText('Found it! Next Stage?');
+            gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
             playSound(foundSound);
             } else {
@@ -78,7 +97,7 @@ function onFieldClick(e) {
     } else if (clicked === 'game__field level--2') {
         if (waldoX > L2_WALDO_MIN_X && waldoX < L2_WALDO_MAX_X && waldoY > L2_WALDO_MIN_Y && waldoY < L2_WALDO_MAX_Y) {
             game.level++;
-            showPopUpWithText('Found it! Next Stage?');
+            gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
             playSound(foundSound);
             } else {
@@ -88,17 +107,17 @@ function onFieldClick(e) {
     } else if (clicked === 'game__field level--3') {
         if (waldoX > L3_WALDO_MIN_X && waldoX < L3_WALDO_MAX_X && waldoY > L3_WALDO_MIN_Y && waldoY < L3_WALDO_MAX_Y) {
             game.level++;
-            showPopUpWithText('Found it! Next Stage?');
+            gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
             playSound(foundSound);
         } else {
-               game.educeLive();
+               game.reduceLive();
                playSound(wrongSound);
         }
     } else if (clicked === 'game__field level--4') {
         if (waldoX > L4_WALDO_MIN_X && waldoX < L4_WALDO_MAX_X && waldoY > L4_WALDO_MIN_Y && waldoY < L4_WALDO_MAX_Y) {
             game.level++;
-            showPopUpWithText('Found it! Next Stage?');
+            gameBanner.showWithText('Found it! Next Stage?');
             game.stopTimer();
             playSound(foundSound);
         } else {
@@ -115,62 +134,4 @@ function onFieldClick(e) {
                playSound(wrongSound);
         }
     }
-}
-
-function showPopUpWithText(text) {
-    popUpOn = true;
-    popUpMessage.innerText = text;
-    popUp.classList.remove('pop-up--hide');
-    if (game.started) {
-        showPlayButton();
-    } else {
-        showReplayButton();
-    }
-    game.stopTimer();
-}
-
-function hidePopUp() {
-    popUpOn = false;
-    popUp.classList.add('pop-up--hide');
-}
-
-function showReplayButton() { 
-    icon.classList.remove('fa-play'); 
-    icon.classList.add('fa-undo-alt');
-}
-
-function showPlayButton() {
-    icon.classList.remove('fa-undo-alt'); 
-    icon.classList.add('fa-play');
-}
-
-popUpRefresh.addEventListener('click', () => {
-    if (game.started) {
-        updateLevel();
-        nextLevel();
-        hidePopUp();
-        game.startTimer();
-    } else {
-        hidePopUp();
-        initGame(game.level);
-
-    }
-    playSound(foundSound);
-});
-
-function initGame(failedLevel) {
-    game.level = 1;
-    game.live = 5;
-    gameField.classList.remove(`level--${failedLevel}`);
-    gameField.classList.add('level--1');
-    game.showStartPage();
-}
-
-function nextLevel() {
-    gameField.classList.remove(`level--${game.level-1}`);
-    gameField.classList.add(`level--${game.level}`);
-}
-
-function updateLevel() {
-    game.gameLevel.innerText = `Level ${game.level}`;
 }
