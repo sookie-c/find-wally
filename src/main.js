@@ -4,37 +4,13 @@ import Game from './game.js';
 import PopUp from './popup.js';
 import * as sound from './sound.js';
 
-const L1_WALDO_MIN_X = 610;
-const L1_WALDO_MAX_X = 630;
-const L1_WALDO_MIN_Y = 205;
-const L1_WALDO_MAX_Y = 256;
-
-const L2_WALDO_MIN_X = 750;
-const L2_WALDO_MAX_X = 775;
-const L2_WALDO_MIN_Y = 160;
-const L2_WALDO_MAX_Y = 200;
-
-const L3_WALDO_MIN_X = 55;
-const L3_WALDO_MAX_X = 77;
-const L3_WALDO_MIN_Y = 333;
-const L3_WALDO_MAX_Y = 360;
-
-const L4_WALDO_MIN_X = 560;
-const L4_WALDO_MAX_X = 580;
-const L4_WALDO_MIN_Y = 208;
-const L4_WALDO_MAX_Y = 252;
-
-const L5_WALDO_MIN_X = 22;
-const L5_WALDO_MAX_X = 38;
-const L5_WALDO_MIN_Y = 530;
-const L5_WALDO_MAX_Y = 567;
-
-const gameField = document.querySelector('.game__field');
-
 const game = new Game(120);
 game.setGameStopListener((reason) => {
     let message;
     switch (reason) {
+        case 'pass':
+            message = 'Found it! Next Level?';
+            break;
         case 'win':
             message = 'Congrats, You completed!';
             break;
@@ -58,65 +34,3 @@ gameBanner.setClickListener(() => {
     }
     sound.playFound();
 });
-
-gameField.addEventListener('click', onFieldClick);
-
-function onFieldClick(e) {
-    const clicked = e.target.className;
-    const waldoX = e.offsetX;
-    const waldoY = e.offsetY;
-
-    if (gameBanner.popUpOn) {
-        return;
-    }
-    if (clicked === 'game__field level--1') {
-        if (waldoX > L1_WALDO_MIN_X && waldoX < L1_WALDO_MAX_X && waldoY > L1_WALDO_MIN_Y && waldoY < L1_WALDO_MAX_Y) {
-            game.level++;
-            gameBanner.showWithText('Found it! Next Stage?');
-            game.stopTimer();
-            sound.playFound();
-            } else {
-                game.reduceLive();
-                sound.playWrong();
-            }
-    } else if (clicked === 'game__field level--2') {
-        if (waldoX > L2_WALDO_MIN_X && waldoX < L2_WALDO_MAX_X && waldoY > L2_WALDO_MIN_Y && waldoY < L2_WALDO_MAX_Y) {
-            game.level++;
-            gameBanner.showWithText('Found it! Next Stage?');
-            game.stopTimer();
-            sound.playFound();
-            } else {
-                   game.reduceLive();
-                   sound.playWrong();
-            }
-    } else if (clicked === 'game__field level--3') {
-        if (waldoX > L3_WALDO_MIN_X && waldoX < L3_WALDO_MAX_X && waldoY > L3_WALDO_MIN_Y && waldoY < L3_WALDO_MAX_Y) {
-            game.level++;
-            gameBanner.showWithText('Found it! Next Stage?');
-            game.stopTimer();
-            sound.playFound();
-        } else {
-               game.reduceLive();
-               sound.playWrong();
-        }
-    } else if (clicked === 'game__field level--4') {
-        if (waldoX > L4_WALDO_MIN_X && waldoX < L4_WALDO_MAX_X && waldoY > L4_WALDO_MIN_Y && waldoY < L4_WALDO_MAX_Y) {
-            game.level++;
-            gameBanner.showWithText('Found it! Next Stage?');
-            game.stopTimer();
-            sound.playFound();
-        } else {
-               game.reduceLive();
-               sound.playWrong();
-        }
-    } else if (clicked === 'game__field level--5') {
-        if (waldoX > L5_WALDO_MIN_X && waldoX < L5_WALDO_MAX_X && waldoY > L5_WALDO_MIN_Y && waldoY < L5_WALDO_MAX_Y) {
-                game.finish(true);
-                game.stopTimer();
-                sound.playWin();
-        } else {
-               game.reduceLive();
-               sound.playWrong();
-        }
-    }
-}

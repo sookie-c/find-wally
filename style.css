@@ -46,7 +46,7 @@ body {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 22px;
   transform: translateY(-100%);
-  /* display: none; */
+  user-select: none;
 }
 
 .game__logo {

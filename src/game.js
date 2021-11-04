@@ -1,6 +1,32 @@
 'use strict';
 
+import PopUp from './popup.js';
 import * as sound from './sound.js';
+
+const L1_WALDO_MIN_X = 610;
+const L1_WALDO_MAX_X = 630;
+const L1_WALDO_MIN_Y = 205;
+const L1_WALDO_MAX_Y = 256;
+
+const L2_WALDO_MIN_X = 750;
+const L2_WALDO_MAX_X = 775;
+const L2_WALDO_MIN_Y = 160;
+const L2_WALDO_MAX_Y = 200;
+
+const L3_WALDO_MIN_X = 55;
+const L3_WALDO_MAX_X = 77;
+const L3_WALDO_MIN_Y = 333;
+const L3_WALDO_MAX_Y = 360;
+
+const L4_WALDO_MIN_X = 560;
+const L4_WALDO_MAX_X = 580;
+const L4_WALDO_MIN_Y = 208;
+const L4_WALDO_MAX_Y = 252;
+
+const L5_WALDO_MIN_X = 22;
+const L5_WALDO_MAX_X = 38;
+const L5_WALDO_MIN_Y = 530;
+const L5_WALDO_MAX_Y = 567;
 
 export default class Game {
     constructor(gameDuration) {
@@ -13,6 +39,7 @@ export default class Game {
         this.gameLive = document.querySelector('.game__live');
         this.gameTimer = document.querySelector('.game__timer');
         this.gameField = document.querySelector('.game__field');
+        this.popUp = document.querySelector('.pop-up');
         this.icon = document.querySelector('.fas');
 
         this.started = false;
@@ -23,6 +50,8 @@ export default class Game {
             this.start();
             sound.playFound();
         });
+        this.gameBanner = new PopUp();
+        this.gameField.addEventListener('click', this.onFieldClick);
     }
 
     setGameStopListener(onGameStop) {
@@ -36,6 +65,7 @@ export default class Game {
         this.showLive();
         this.showLevel();
         this.startTimer();
+        this.activePointer();
         sound.playBg();
     }
 
@@ -76,6 +106,7 @@ export default class Game {
             if (remainingTimeSec <= 0) {
                 clearInterval(this.timer);
                 this.finish(false);
+                this.deactivePointer();
                 sound.playAlert();
                 return;
             }
@@ -102,8 +133,17 @@ export default class Game {
         if (this.live <= 0) {
             this.started = false;
             this.finish(false);
+            this.deactivePointer();
             sound.playAlert();
         }
+    }
+
+    deactivePointer() {
+        this.gameField.style.pointerEvents = 'none';
+    }
+
+    activePointer() {
+        this.gameField.style.pointerEvents = 'auto';
     }
 
     finish(win) {
@@ -132,4 +172,61 @@ export default class Game {
         this.icon.classList.add('fa-undo-alt');
         this.icon.classList.remove('fa-play');
     }
+
+    onFieldClick = (e) => {
+        const clicked = e.target.className;
+        const waldoX = e.offsetX;
+        const waldoY = e.offsetY;
+
+        if (clicked === 'game__field level--1') {
+            if (waldoX > L1_WALDO_MIN_X && waldoX < L1_WALDO_MAX_X && waldoY >  L1_WALDO_MIN_Y && waldoY < L1_WALDO_MAX_Y) {
+                this.level++;
+                this.onGameStop && this.onGameStop('pass');
+                this.stopTimer();
+                sound.playFound();
+                } else {
+                    this.reduceLive();
+                    sound.playWrong();
+                }
+        } else if (clicked === 'game__field level--2') {
+            if (waldoX > L2_WALDO_MIN_X && waldoX < L2_WALDO_MAX_X && waldoY >  L2_WALDO_MIN_Y && waldoY < L2_WALDO_MAX_Y) {
+                this.level++;
+                this.onGameStop && this.onGameStop('pass');
+                this.stopTimer();
+                sound.playFound();
+                } else {
+                       this.reduceLive();
+                       sound.playWrong();
+                }
+        } else if (clicked === 'game__field level--3') {
+            if (waldoX > L3_WALDO_MIN_X && waldoX < L3_WALDO_MAX_X && waldoY >  L3_WALDO_MIN_Y && waldoY < L3_WALDO_MAX_Y) {
+                this.level++;
+                this.onGameStop && this.onGameStop('pass');
+                this.stopTimer();
+                sound.playFound();
+            } else {
+                   this.reduceLive();
+                   sound.playWrong();
+            }
+        } else if (clicked === 'game__field level--4') {
+            if (waldoX > L4_WALDO_MIN_X && waldoX < L4_WALDO_MAX_X && waldoY >  L4_WALDO_MIN_Y && waldoY < L4_WALDO_MAX_Y) {
+                this.level++;
+                this.onGameStop && this.onGameStop('pass');
+                this.stopTimer();
+                sound.playFound();
+            } else {
+                   this.reduceLive();
+                   sound.playWrong();
+            }
+        } else if (clicked === 'game__field level--5') {
+            if (waldoX > L5_WALDO_MIN_X && waldoX < L5_WALDO_MAX_X && waldoY >  L5_WALDO_MIN_Y && waldoY < L5_WALDO_MAX_Y) {
+                    this.finish(true);
+                    this.stopTimer();
+                    sound.playWin();
+            } else {
+                   this.reduceLive();
+                   sound.playWrong();
+            }
+        }
+    }   
 }
