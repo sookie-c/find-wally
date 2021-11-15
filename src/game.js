@@ -154,7 +154,7 @@ export default class Game {
         sound.stopBg();
     }
 
-    initGame(failedLevel) {
+    init(failedLevel) {
         this.level = 1;
         this.live = 5;
         this.gameField.classList.remove(`level--${failedLevel}`);

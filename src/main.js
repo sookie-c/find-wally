@@ -26,10 +26,10 @@ game.setGameStopListener((reason) => {
 const gameBanner = new PopUp();
 gameBanner.setClickListener(() => {
     if (!game.started) {
-        game.initGame(game.level);
+        game.init(game.level);
     } else {
-        game.updateLevel();
         game.nextLevel();
+        game.updateLevel();
         game.startTimer();
     }
     sound.playFound();
