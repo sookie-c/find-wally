@@ -1,5 +1,5 @@
 body {
-  font-family: "Lato", sans-serif;
+  font-family: 'Lato', sans-serif;
   background-color: rgb(240, 220, 220);
 }
 
@@ -15,23 +15,23 @@ body {
 }
 
 .level--1 {
-  background: url("img/level/l1.jpg") center/cover;
+  background: url('img/level/l1.jpg') center/cover;
 }
 
 .level--2 {
-  background: url("img/level/l2.jpg") center/cover;
+  background: url('img/level/l2.jpg') center/cover;
 }
 
 .level--3 {
-  background: url("img/level/l3.jpg") center/cover;
+  background: url('img/level/l3.jpg') center/cover;
 }
 
 .level--4 {
-  background: url("img/level/l4.jpg") center/cover;
+  background: url('img/level/l4.jpg') center/cover;
 }
 
 .level--5 {
-  background: url("img/level/l5.jpg") center/cover;
+  background: url('img/level/l5.jpg') center/cover;
 }
 
 .game__start {
@@ -60,10 +60,12 @@ body {
   font-size: 42px;
   cursor: pointer;
   transition: all 300ms ease-in;
-  font-family: "Lato", sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 .game__header {
+  position: fixed;
+  left: 190px;
   margin: auto;
   width: 880px;
   justify-content: space-between;
