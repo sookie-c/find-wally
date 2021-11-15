@@ -64,9 +64,6 @@ body {
 }
 
 .game__header {
-  position: fixed;
-  left: 190px;
-  margin: auto;
   width: 880px;
   justify-content: space-between;
   padding: 2px 10px 0 10px;
